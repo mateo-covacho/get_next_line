@@ -1,0 +1,4 @@
+Hey welcome to the first line of this test file
+wow you made it to the second line
+be careful this one has a trailing space 
+and this one special chars?!"·!"·=!?¿"·!"
