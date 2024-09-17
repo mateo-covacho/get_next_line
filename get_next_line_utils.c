@@ -1,15 +1,3 @@
-// /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lvez-dia <lvez-dia@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 15:38:11 by lvez-dia          #+#    #+#             */
-/*   Updated: 2024/05/16 10:28:23 by lvez-dia         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
 char	*ft_strchr(const char *s, int c)
@@ -75,4 +63,22 @@ size_t	ft_strlen(const char *s)
 	while (s[i] != '\0')
 		i++;
 	return (i);
+}
+
+char	*ft_strdup(const char *s)
+{
+	unsigned char	*str;
+	int				i;
+
+	i = 0;
+	str = (unsigned char *)malloc(ft_strlen(s) + 1);
+	if (!str)
+		return (NULL);
+	while (s[i] != '\0')
+	{
+		str[i] = s[i];
+		i++;
+	}
+	str[i] = '\0';
+	return ((char *)str);
 }
