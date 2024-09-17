@@ -54,7 +54,7 @@ static char	*read_and_accumulate(int fd, char **content)
 	int		bytes_read;
 
 	if (!*content)
-		*content = ft_strdup("");
+		*content = (char *) ft_strdup("");
 	if (!*content)
 		return (NULL);
 	chunk = malloc((BUFFER_SIZE + 1) * sizeof(char));
