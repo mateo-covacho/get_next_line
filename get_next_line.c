@@ -53,6 +53,7 @@ static char	*read_and_accumulate(int fd, char **content)
 	char	*chunk;
 	int		bytes_read;
 
+	// if content is NULL, initialize it as an empty string
 	if (!*content)
 		*content = (char *) ft_strdup("");
 	if (!*content)
@@ -65,7 +66,7 @@ static char	*read_and_accumulate(int fd, char **content)
 	{
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (free(chunk), free(*content), NULL);
+			return (free(chunk), free(*content), NULL); //TODO why the free content ???
 		chunk[bytes_read] = '\0';
 		*content = ft_strjoin(*content, chunk);
 		if (!*content)
@@ -76,22 +77,22 @@ static char	*read_and_accumulate(int fd, char **content)
 
 char	*get_next_line(int fd)
 {
-	static char	*content;
+	static char	*content_store;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	content = read_and_accumulate(fd, &content);
-	if (!content)
+	content_store = read_and_accumulate(fd, &content_store);
+	if (!content_store)
 		return (NULL);
-	line = extract_line(content);
+	line = extract_line(content_store);
 	if (!line)
 	{
-		free(content);
-		content = NULL;
+		free(content_store);
+		content_store = NULL;
 		return (NULL);
 	}
-	content = extract_remainder(content);
+	content_store = extract_remainder(content_store);
 	return (line);
 }
 
