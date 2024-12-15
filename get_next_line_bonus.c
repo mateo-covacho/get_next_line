@@ -102,25 +102,3 @@ char	*get_next_line(int fd)
 	str[fd] = take_after_new_line(str[fd]);
 	return (line);
 }
-/*int	main()
-{
-	int fd1 = open("t1", O_RDONLY);
-	int fd2 = open("t2", O_RDONLY);
-	char	*line;
-
-	while ((line = get_next_line(fd1)) != NULL)
-	{
-		printf("%s", line);
-		free(line);
-		printf("%c", '\n');
-		while ((line = get_next_line(fd2)) != NULL)
-		{
-			printf("%s", line);
-			free(line);
-		}
-		printf("%c", '\n');
-	}
-	close(fd1);
-	close(fd2);
-	return (0);
-}*/

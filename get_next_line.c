@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-static char	*extract_remainder(char *buffer)
+static char	*take_after_new_line(char *buffer)
 {
 	int		i;
 	int		j;
@@ -23,7 +23,7 @@ static char	*extract_remainder(char *buffer)
 	return (remainder);
 }
 
-static char	*extract_line(char *content)
+static char	*take_unit_new_line(char *content)
 {
 	int		i;
 	char	*line;
@@ -48,7 +48,7 @@ static char	*extract_line(char *content)
 	return (line);
 }
 
-static char	*read_and_accumulate(int fd, char **content)
+static char	*read_and_accumulate_until_new_line(int fd, char **content)
 {
 	char	*chunk;
 	int		bytes_read;
@@ -66,7 +66,7 @@ static char	*read_and_accumulate(int fd, char **content)
 	{
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (free(chunk), free(*content), NULL); //TODO why the free content ???
+			return (free(chunk), free(*content), NULL); 
 		chunk[bytes_read] = '\0';
 		*content = ft_strjoin(*content, chunk);
 		if (!*content)
@@ -82,102 +82,16 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	content_store = read_and_accumulate(fd, &content_store);
+	content_store = read_and_accumulate_until_new_line(fd, &content_store);
 	if (!content_store)
 		return (NULL);
-	line = extract_line(content_store);
+	line = take_unit_new_line(content_store);
 	if (!line)
 	{
 		free(content_store);
 		content_store = NULL;
 		return (NULL);
 	}
-	content_store = extract_remainder(content_store);
+	content_store = take_after_new_line(content_store);
 	return (line);
 }
-
-/*int main()
-{
-	//Simple main
-	
-	int	fd;
-	char	*line;
-
-	fd = open("t1", O_RDONLY);
-	while ((line = get_next_line(1)) != NULL)
-	{
-		printf("%s", line);
-		free(line);
-	}
-	printf("%s", line);
-	close(fd);
-	return (0);
-}*/
-
-/*int	main(int argc, char *argv[])
-{
-	char *buffer;
-
-	// Read from file if an argument is provided on the command line
-	if (argc == 2)
-	{
-		// Open the file for reading
-		int fd = open(argv[1], O_RDONLY);
-		if (fd == -1)
-		{
-			perror("Error opening file");
-			exit(EXIT_FAILURE);
-		}
-
-		// Calling the function to read the file contents
-		while ((buffer = get_next_line(fd)) != NULL)
-		{
-			// Check if memory was allocated correctly
-			if (buffer == NULL)
-			{
-				fprintf(stderr, "Failure to allocate buffer memory\n");
-				break;
-			}
-
-			// Process the line read
-			printf("RECEIVED: %s\n", buffer);
-
-			// Release memory allocated to the line
-			free(buffer);
-		}
-
-		// Close file descriptor
-		if (close(fd) == -1)
-		{
-			perror("Error closing file");
-			exit(EXIT_FAILURE);
-		}
-	}
-	// Read from stdin if no arguments are provided on the command line
-	else if (argc == 1)
-	{
-		printf("Enter text from stdin:\n");
-		while ((buffer = get_next_line(STDIN_FILENO)) != NULL)
-		{
-			// Check if memory was allocated correctly
-			if (buffer == NULL)
-			{
-				fprintf(stderr, "Failure to allocate buffer memory\n");
-				break;
-			}
-
-			// Process the line read
-			printf("RECEIVED: %s\n", buffer);
-
-			// Release memory allocated to the line
-			free(buffer);
-		}
-	}
-	else
-	{
-		fprintf(stderr, "Uso: %s [nombre_del_archivo]\n", argv[0]);
-		exit(EXIT_FAILURE);
-	}
-
-	return 0;
-}*/

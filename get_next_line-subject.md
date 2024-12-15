@@ -38,7 +38,7 @@ también te hará aprender el increíble concepto de las variables estáticas en
 - Si el enunciado lo requiere, deberás entregar unMakefileque compilará tus archivos
     fuente al output requerido con las flags-Wall, -Werrory -Wextra, utilizar cc y
     por supuesto tuMakefileno debe hacer relink.
-- TuMakefiledebe contener al menos las normas$(NAME),all,clean,fcleany
+- Tu Makefile debe contener al menos las normas $(NAME),all,clean,fcleany
     re.
 - Para entregar los bonus de tu proyecto deberás incluir una regla bonus en tu
     Makefile, en la que añadirás todos los headers, librerías o funciones que estén

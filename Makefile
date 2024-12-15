@@ -1,27 +1,30 @@
 NAME = get_next_line.a
-
 CC = cc
-CFLAGS = -Wall -Wextra -Werror $(BUFFER_SIZE)
+CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=42
+AR = ar rcs
+RM = rm -f
 
 SRCS = get_next_line.c get_next_line_utils.c
 OBJS = $(SRCS:.c=.o)
 
-HEADER = get_next_line.h
+SRCS_BONUS = get_next_line_bonus.c get_next_line_utils_bonus.c
+OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
+	$(AR) $(NAME) $(OBJS)
 
-%.o: %.c $(HEADER)
+bonus: $(OBJS_BONUS)
+	$(AR) $(NAME) $(OBJS_BONUS)
+
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
