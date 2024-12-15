@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macovach <macovach@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/15 20:46:06 by macovach          #+#    #+#             */
+/*   Updated: 2024/12/15 20:46:24 by macovach         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-static char	*take_after_new_line(char *buffer)
+static char *take_after_new_line(char *buffer)
 {
-	int		i;
-	int		j;
-	char	*remainder;
+	int i;
+	int j;
+	char *remainder;
 
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
+	while (buffer[i] && buffer[i] != '\n') i++;
 	if (!buffer[i])
 		return (free(buffer), NULL);
 	remainder = malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
@@ -16,23 +27,21 @@ static char	*take_after_new_line(char *buffer)
 		return (free(buffer), NULL);
 	j = 0;
 	i++;
-	while (buffer[i])
-		remainder[j++] = buffer[i++];
+	while (buffer[i]) remainder[j++] = buffer[i++];
 	remainder[j] = '\0';
 	free(buffer);
 	return (remainder);
 }
 
-static char	*take_unit_new_line(char *content)
+static char *take_unit_new_line(char *content)
 {
-	int		i;
-	char	*line;
+	int i;
+	char *line;
 
 	i = 0;
 	if (!content[i])
 		return (NULL);
-	while (content && content[i] && content[i] != '\n')
-		i++;
+	while (content && content[i] && content[i] != '\n') i++;
 	line = malloc(sizeof(char) * (i + 2));
 	if (!line)
 		return (NULL);
@@ -48,13 +57,13 @@ static char	*take_unit_new_line(char *content)
 	return (line);
 }
 
-static char	*read_until_new_line(int fd, char **content)
+static char *read_until_new_line(int fd, char **content)
 {
-	char	*chunk;
-	int		bytes_read;
+	char *chunk;
+	int bytes_read;
 
 	if (!*content)
-		*content = (char *) ft_strdup("");
+		*content = (char *)ft_strdup("");
 	if (!*content)
 		return (NULL);
 	chunk = malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -65,12 +74,7 @@ static char	*read_until_new_line(int fd, char **content)
 	{
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
 		if (bytes_read == -1)
-		{
-			free(chunk);
-			free(*content);
-			*content = NULL;
-			return (NULL);
-		}
+			return (free(chunk), free(*content), NULL);
 		chunk[bytes_read] = '\0';
 		*content = ft_strjoin(*content, chunk);
 		if (!*content)
@@ -79,10 +83,10 @@ static char	*read_until_new_line(int fd, char **content)
 	return (free(chunk), *content);
 }
 
-char	*get_next_line(int fd)
+char *get_next_line(int fd)
 {
-	static char	*content_store;
-	char		*line;
+	static char *content_store;
+	char *line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
