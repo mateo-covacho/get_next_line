@@ -72,7 +72,12 @@ static char	*read_until_new_line(int fd, char **str)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (free(buff), free(*str), NULL);
+		{
+			free(buff);
+			free(*str);
+			*str = NULL; // Reset the static buffer to NULL
+			return (NULL);
+		}
 		buff[bytes_read] = '\0';
 		*str = ft_strjoin(*str, buff);
 		if (!*str)

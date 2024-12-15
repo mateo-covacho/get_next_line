@@ -48,12 +48,11 @@ static char	*take_unit_new_line(char *content)
 	return (line);
 }
 
-static char	*read_and_accumulate_until_new_line(int fd, char **content)
+static char	*read_until_new_line(int fd, char **content)
 {
 	char	*chunk;
 	int		bytes_read;
 
-	// if content is NULL, initialize it as an empty string
 	if (!*content)
 		*content = (char *) ft_strdup("");
 	if (!*content)
@@ -66,7 +65,12 @@ static char	*read_and_accumulate_until_new_line(int fd, char **content)
 	{
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (free(chunk), free(*content), NULL); 
+		{
+			free(chunk);
+			free(*content);
+			*content = NULL;
+			return (NULL);
+		}
 		chunk[bytes_read] = '\0';
 		*content = ft_strjoin(*content, chunk);
 		if (!*content)
@@ -82,7 +86,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	content_store = read_and_accumulate_until_new_line(fd, &content_store);
+	content_store = read_until_new_line(fd, &content_store);
 	if (!content_store)
 		return (NULL);
 	line = take_unit_new_line(content_store);
